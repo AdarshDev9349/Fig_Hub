@@ -1,0 +1,73 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIGHUB</title>
+</head>
+<style>
+
+    .container{
+         
+   display: flex;
+   justify-content: center;
+   
+    }
+    header{
+        display: flex;
+        justify-content: center;;
+        font-size: large;
+        margin-top: 100px;
+    }
+
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width:300px;
+        
+    }
+   input{
+    width:300px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+   }
+   label{
+    width:300px;
+    font-size: 18px;
+
+   }
+  .errorlist{
+
+    color: red;
+  }
+   .helptext{
+    display:none;
+    
+   }
+</style>
+<body>
+    
+<header><h1>Sign up</h1></header>
+
+
+
+<div class="container">
+    <form method="POST">
+        {% csrf_token %}
+       
+        {{form}}
+        <button type="submit">Sign up</button>
+          
+        
+       <p>Already have an account? <a href="{% url 'fig:login' %}">Login</a></p>
+    </form>
+    
+</div>
+</body>
+</html>
