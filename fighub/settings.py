@@ -79,15 +79,15 @@ WSGI_APPLICATION = 'fighub.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-import dj_database_url
+
 
 
 DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgres://fig_hub_user:Ezf7ZOVWWPGZX8RIptS1jgqvSw1SzQml@dpg-co82caq0si5c73b5ofbg-a.oregon-postgres.render.com/fig_hub',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    
 }
     
 
