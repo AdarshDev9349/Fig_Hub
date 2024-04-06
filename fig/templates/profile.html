@@ -98,6 +98,7 @@ nav ul li a:hover {
 .project1{
      display: grid;
      grid-template-columns: repeat(2,1fr)
+     
     
 }
 .project h3 {
@@ -147,7 +148,62 @@ input{
 
 }
   
-  
+.menu-toggle {
+    cursor: pointer;
+    display: none; /* Hide by default on larger screens */
+}
+
+.menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.menu li:first-child {
+    margin-left: 0;
+}
+
+.menu a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Hamburger icon */
+.hamburger {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 5px 0;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 768px) {
+    .menu-toggle {
+        display: block; /* Show hamburger icon on smaller screens */
+    }
+
+    .menu {
+        display: none; /* Hide menu items by default on smaller screens */
+    }
+
+    .menu.active {
+        display: block; /* Show menu when active on smaller screens */
+    }
+
+    .menu li {
+        display: block;
+        margin: 10px 0;
+    }
+    header.active {
+        padding-bottom: 40px; /* Adjust as needed */
+    }
+}
+JavaScript (script.js):
   
 </style>
 <body>
@@ -155,7 +211,12 @@ input{
         <div class="container">
             <h1>Welcome, <span>{{user.username}}</span> </h1>
             <nav>
-                <ul>
+                <div class="menu-toggle">
+                    <div class="hamburger"></div>
+                    <div class="hamburger"></div>
+                    <div class="hamburger"></div>
+                </div>
+                <ul class='menu'>
                     <li><a href="{% url "fig:home" %}">Home</a></li>
                     <li><a href="{% url "fig:search" %}">Search</a></li>
                     <li><a href="#">About</a></li>
@@ -223,6 +284,12 @@ input{
           event.preventDefault(); 
           document.getElementById('hiddenForm').submit(); 
       });
+
+      document.querySelector('.menu-toggle').addEventListener('click', function() {
+        document.querySelector('.menu').classList.toggle('active');
+        document.querySelector('header').classList.toggle('active');
+    });
+    
   </script>
 </body>
 </html>
