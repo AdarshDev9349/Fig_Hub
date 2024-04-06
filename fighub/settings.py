@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os ,dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,8 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='d8d91201658f40a0b862cef9fc2d3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -90,8 +89,11 @@ DATABASES = {
     
 }
     
-
-
+DATABASES['default'] = dj_database_url.parse(
+    'postgres://fighubdb_user:hdHzyV3PZEK17mbZQ9Npk5gg51h4ES54@dpg-co834cev3ddc73b7al30-a.oregon-postgres.render.com/fighubdb',
+    conn_max_age=600,
+    conn_health_checks=True,
+)
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
