@@ -9,4 +9,6 @@ urlpatterns = [
     path('form',views.profile,name="profile"),
     path("search",views.search,name='search'),
     path("user",views.searchuser,name="searchuser"),
+    path('v',views.render_figma_image,name='render_figma_image'),
+ 
 ]

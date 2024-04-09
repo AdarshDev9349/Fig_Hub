@@ -123,6 +123,26 @@ nav ul li a:hover {
     background-color: #555;
 }
 
+.widget-screen {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #ccc;
+            padding: 20px;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }       
+
 footer {
     background-color: #222;
     color: #fff;
@@ -192,7 +212,8 @@ input{
     }
 
     .menu.active {
-        display: block; /* Show menu when active on smaller screens */
+        display: block;
+       /* Show menu when active on smaller screens */
     }
 
     .menu li {
@@ -201,9 +222,11 @@ input{
     }
     header.active {
         padding-bottom: 40px; /* Adjust as needed */
+       
     }
+
 }
-JavaScript (script.js):
+
   
 </style>
 <body>
@@ -250,6 +273,12 @@ JavaScript (script.js):
                 <div class="project">
                     <h3> {{i.name}} </h3>
                      <br>
+                     <form action="{%url 'fig:render_figma_image'%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="figma_url" value="{{ i.figma_file }}">
+                        <button class="btn btn-file"  id="btn-file">View Image</button>
+                     </form>
+                     <br>
                     <a href="{{i.figma_file}}" class="btn">View file in figma</a>
                 </div>
 
@@ -270,12 +299,13 @@ JavaScript (script.js):
             </div>
         </div>
     </section>
-
     <footer>
         <div class="container">
             <p>&copy; 2024 Charmix. All rights reserved.</p>
         </div>
     </footer>
+
+
 
 
 
@@ -289,6 +319,7 @@ JavaScript (script.js):
         document.querySelector('.menu').classList.toggle('active');
         document.querySelector('header').classList.toggle('active');
     });
+
     
   </script>
 </body>

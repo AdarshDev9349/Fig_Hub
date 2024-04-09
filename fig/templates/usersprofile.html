@@ -192,6 +192,12 @@ input{
                 <div class="project">
                     <h3> {{i.name}} </h3>
                      <br>
+                     <form action="{%url 'fig:render_figma_image'%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="figma_url" value="{{ i.figma_file }}">
+                        <button class="btn btn-file"  id="btn-file">View Image</button>
+                     </form>
+                     <br>
                     <a href="{{i.figma_file}}" class="btn">View file in figma</a>
                 </div>
 
