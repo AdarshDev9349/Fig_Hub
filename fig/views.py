@@ -1,6 +1,6 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.http import JsonResponse
-
+import os
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth import logout as user_logout
@@ -86,7 +86,8 @@ def render_figma_image(request):
                 node_id = extract_node_ids(figma_url)
                 print(f'Node ID: {node_id}')
                 api_url = f'https://api.figma.com/v1/images/{file_key}?ids={node_id}'
-                headers = {'X-FIGMA-TOKEN': 'figd_4FulpmVt5KJksGuri0UGFjpqBotFW0BuXmxBbXZI'}
+                headers = {'X-FIGMA-TOKEN': os.environ.get('FIGMA_TOKEN')}
+                print(headers)
                 response = requests.get(api_url, headers=headers)
                 if response.status_code == 200:
                     image_url = response.json()['images'][node_id]
