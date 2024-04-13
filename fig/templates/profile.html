@@ -123,26 +123,95 @@ nav ul li a:hover {
     background-color: #555;
 }
 
-.widget-screen {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            border: 2px solid #ccc;
-            padding: 20px;
-            z-index: 1000;
-            transition: opacity 0.3s ease;
-            
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }       
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* semi-transparent white */
+    display: none; /* Initially hidden */
+}
 
+/* Styling for spinner animation */
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 4px solid #f3f3f3; /* Light grey border */
+    border-top: 4px solid #3498db; /* Blue border */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite; /* Spin animation */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+  /* Style for the widget */
+  #widget {
+    display: none; /* Initially hidden */
+    margin-top: 10px;
+    width: 900px;
+    height: 600px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid gray;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+  }
+  img{
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            object-position: center;
+            margin: 25%;
+
+        }
+  /* Style for the close button */
+  .closeButton {
+   
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 30px;
+    position:absolute;
+  }
+   .close{
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-size: 30px;
+    position:absolute;
+   }
+
+  #searchform {
+    display: none; /* Initially hidden */
+    margin-top: 10px;
+    width: 400px;
+    height: 400px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid gray;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: auto;
+  } 
+ #searchform input{
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+ }
 footer {
     background-color: #222;
     color: #fff;
@@ -167,7 +236,7 @@ input{
      outline: none;
 
 }
-  
+
 .menu-toggle {
     cursor: pointer;
     display: none; /* Hide by default on larger screens */
@@ -241,7 +310,7 @@ input{
                 </div>
                 <ul class='menu'>
                     <li><a href="{% url "fig:home" %}">Home</a></li>
-                    <li><a href="{% url "fig:search" %}">Search</a></li>
+                    <li><a href="#"  class="widgetToggle" id="widgetToggle">Search</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#" id="submitForm">
 
@@ -263,7 +332,9 @@ input{
             <p>Explore your designs</p>
         </div>
     </section>
-
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
     <section class="projects">
         <div class="container">
             <h2>Your designs</h2>
@@ -276,7 +347,7 @@ input{
                      <form action="{%url 'fig:render_figma_image'%}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="figma_url" value="{{ i.figma_file }}">
-                        <button class="btn btn-file"  id="btn-file">View Image</button>
+                        <button class="btn toggle-widget-button"  id="btn-file">View Image</button>
                      </form>
                      <br>
                     <a href="{{i.figma_file}}" class="btn">View file in figma</a>
@@ -299,13 +370,39 @@ input{
             </div>
         </div>
     </section>
+
+    <div class="widget" id="widget">
+
+        <!-- Close button -->
+       <a href="{% url "fig:home" %}"> <span class="closeButton" id="closeButton">&times;</span></a>
+         <img src="{{image_url}}" alt="Image" srcset="">
+
+      </div>
+
+
+
+
+      <div class="searchform" id="searchform">
+      <span class="close" id="close">&times;</span>
+        <form action="{% url 'fig:searchuser' %}" method="post">
+            {% csrf_token %}
+            <input list="search" name="search" id="" required>
+            <datalist id="search">
+                {% for u in users %}
+                <option value="{{u.username}}">
+
+                {% endfor %}
+            </datalist>
+            <button type="submit">search</button>
+    
+      </div>
     <footer>
         <div class="container">
             <p>&copy; 2024 Charmix. All rights reserved.</p>
         </div>
     </footer>
 
-
+    
 
 
 
@@ -319,8 +416,95 @@ input{
         document.querySelector('.menu').classList.toggle('active');
         document.querySelector('header').classList.toggle('active');
     });
-
     
-  </script>
+    // Listen for clicks on buttons with class toggle-widget-button
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('toggle-widget-button')) {
+            toggleWidget();
+        }
+    });
+
+    const widget = document.getElementById('widget');
+    const closeButton = document.getElementById('closeButton');
+
+    closeButton.addEventListener('click', function() {
+        toggleWidget(false); // Hide the widget when the close button is clicked
+    });
+
+    function toggleWidget(show = true) {
+        if (show) {
+            widget.style.display = 'block';
+        } else {
+            widget.style.display = 'none';
+        }
+    }
+
+    // Function to toggle widget visibility
+    function toggleWidget(show = true) {
+        const widget = document.getElementById('widget');
+        if (show) {
+            widget.style.display = 'block';
+            // Store the visibility state in localStorage
+            localStorage.setItem('widgetVisible', 'true');
+        } else {
+            widget.style.display = 'none';
+            // Store the visibility state in localStorage
+            localStorage.setItem('widgetVisible', 'false');
+        }
+    }
+
+    // Function to initialize the widget visibility based on localStorage
+    function initializeWidget() {
+        const widgetVisible = localStorage.getItem('widgetVisible');
+        if (widgetVisible === 'true') {
+            toggleWidget(true); // Show the widget
+        } else {
+            toggleWidget(false); // Hide the widget
+        }
+    }
+
+    // Add event listener for the close button
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeWidget(); // Initialize widget visibility
+        const closeButton = document.getElementById('closeButton');
+        closeButton.addEventListener('click', function() {
+            toggleWidget(false); // Hide the widget when the close button is clicked
+        });
+    });
+
+    // Listen for clicks on buttons with class toggle-widget-button
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('toggle-widget-button')) {
+            toggleWidget();
+        }
+    });
+    window.addEventListener('beforeunload', function() {
+        document.getElementById('loading-overlay').style.display = 'block';
+    });
+    var widget2 = document.getElementById('searchform');
+        var widgetToggle = document.getElementById('widgetToggle');
+
+        // Add click event listener to the toggle link
+        widgetToggle.addEventListener('click', function(event) {
+            // Prevent default link behavior
+            event.preventDefault();
+            // Toggle the visibility of the widget
+            if (widget2.style.display === 'none') {
+                widget2.style.display = 'block';
+            } else {
+                widget2.style.display = 'none';
+            }
+        });
+        var close = document.querySelector('.close');
+
+// Add click event listener to the close button
+close.addEventListener('click', function() {
+    // Close the widget immediately
+    widget2.style.display = 'none';
+});
+</script>
+
+
+
 </body>
 </html>
