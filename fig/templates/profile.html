@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Profile</title>
     
 
@@ -94,6 +95,7 @@ nav ul li a:hover {
     margin-top: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
 }
 .project1{
      display: grid;
@@ -191,6 +193,19 @@ nav ul li a:hover {
     position:absolute;
    }
 
+
+  .delete_btn{
+    background-color: #f9f9f9;
+    border: 0;
+    cursor: pointer;
+    
+
+   
+   
+   
+    
+    
+  }
   #searchform {
     display: none; /* Initially hidden */
     margin-top: 10px;
@@ -272,6 +287,10 @@ input{
 
 /* Media query for smaller screens */
 @media screen and (max-width: 768px) {
+
+    .delete_btn {
+        margin: 0;
+    }
     .menu-toggle {
         display: block; /* Show hamburger icon on smaller screens */
     }
@@ -344,6 +363,13 @@ input{
                 <div class="project">
                     <h3> {{i.name}} </h3>
                      <br>
+                     <form action="{%url 'fig:render_figma_image'%}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete">
+                        <input type="hidden" name="filename" value="{{i.name}}">
+                        <button type="submit" class="delete_btn"><i class="material-icons">&#xe872;</i></button>
+
+                     </form>
                      <form action="{%url 'fig:render_figma_image'%}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="figma_url" value="{{ i.figma_file }}">

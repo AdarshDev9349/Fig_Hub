@@ -55,6 +55,7 @@ def profile(request):
       myform=proform()
     context={'myform':myform}
     return render(request,'form.html',context)
+   
 
 
 
@@ -79,7 +80,7 @@ def searchuser(request):
                 api_url = f'https://api.figma.com/v1/images/{file_key}?ids={node_id}'
                 #print(api_url)
                 headers = {'X-FIGMA-TOKEN': os.environ.get('FIGMA_TOKEN')}
-                #print(headers)
+               # print(headers)
                 response = requests.get(api_url, headers=headers)
                 if response.status_code == 200:
                    image_url = response.json()['images'][node_id]
@@ -104,9 +105,10 @@ def searchuser(request):
 @login_required
 def render_figma_image(request):
     if request.method == 'POST':
-        figma_url = request.POST.get('figma_url')
-        #print(figma_url)
-        if figma_url:
+        if 'figma_url' in request.POST:
+         figma_url = request.POST.get('figma_url')
+         #print(figma_url)
+         if figma_url:
           try:
                 
                 #print(figma_url)
@@ -132,9 +134,17 @@ def render_figma_image(request):
                    
           except :
               return JsonResponse({'error': 'Error fetching image from Figma API'}, status=400)
-             
+        if 'delete' in request.POST:
+            name=request.POST.get('filename')
+            del_pro=profile_model.objects.filter(name=name)
+            print(del_pro)
+            del_pro.delete()
+            return redirect('fig:home')
+           
+           
     else:
            return JsonResponse({'error': 'Invalid request method'}, status=405)
+    
     
 
 
@@ -149,6 +159,9 @@ def home_with_image(request, image_url):
 
 
 
+
+
+   
 
 
 
