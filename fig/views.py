@@ -137,7 +137,7 @@ def render_figma_image(request):
         if 'delete' in request.POST:
             name=request.POST.get('filename')
             del_pro=profile_model.objects.filter(name=name)
-            print(del_pro)
+            #print(del_pro)
             del_pro.delete()
             return redirect('fig:home')
            
