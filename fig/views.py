@@ -15,6 +15,7 @@ import os
 import requests
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signup(request):
     username = request.data.get('username')
     password = request.data.get('password')
