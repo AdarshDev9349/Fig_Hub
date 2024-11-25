@@ -84,7 +84,7 @@ def profile_view(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+
 def add_project(request):
     figma_url = request.data.get('figma_url')
     print(figma_url)
@@ -104,7 +104,8 @@ def add_project(request):
             response = requests.get(api_url, headers=headers)
 
             if response.status_code == 200:
-                image_url = response.json()['images']
+                image_url = response.json()['images'][node_id]
+                print(f'Image URL: {image_url}')
                 project = Project.objects.create(
                     user=request.user,
                     name=project_name,
