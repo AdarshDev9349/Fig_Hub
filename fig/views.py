@@ -13,6 +13,8 @@ from django.db.models import Q
 from rest_framework import status
 import os
 import requests
+from .figma import extract_file_key,extract_node_ids
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -85,12 +87,19 @@ def profile_view(request):
 @permission_classes([IsAuthenticated])
 def add_project(request):
     figma_url = request.data.get('figma_url')
+    print(figma_url)
     project_name = request.data.get('project_name')
 
     if figma_url and project_name:
         try:
-            file_key = figma_url.split('/file/')[1].split('/')[0]
-            api_url = f'https://api.figma.com/v1/images/{file_key}'
+            file_key = extract_file_key(figma_url)
+            node_id = extract_node_ids()
+            print(f'File Key: {file_key}')
+            print(f'Node ID: {node_id}')
+    
+    # Fetching image URL from Figma API
+            api_url = f'https://api.figma.com/v1/images/{file_key}?ids={node_id}'
+            print(f'API URL: {api_url}')
             headers = {'X-FIGMA-TOKEN': os.getenv('FIGMA_TOKEN')}
             response = requests.get(api_url, headers=headers)
 
